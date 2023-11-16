@@ -18,6 +18,7 @@ package io.github.thibaultbee.streampack.streamers.file
 import android.content.Context
 import io.github.thibaultbee.streampack.internal.muxers.ts.TSMuxer
 import io.github.thibaultbee.streampack.internal.muxers.ts.data.TsServiceInfo
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.internal.utils.defaultTsServiceInfo
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import java.io.File
@@ -34,10 +35,12 @@ class CameraTsFileStreamer(
     context: Context,
     enableAudio: Boolean = true,
     tsServiceInfo: TsServiceInfo = context.defaultTsServiceInfo,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
+    callBack: CameraCallback? = null
 ) : BaseCameraFileStreamer(
     context = context,
     muxer = TSMuxer().apply { addService(tsServiceInfo) },
     enableAudio = enableAudio,
-    initialOnErrorListener = initialOnErrorListener
+    initialOnErrorListener = initialOnErrorListener,
+    callBack = callBack
 )

@@ -21,6 +21,7 @@ import android.hardware.camera2.*
 import android.hardware.camera2.CameraDevice.AUDIO_RESTRICTION_NONE
 import android.hardware.camera2.CameraDevice.AUDIO_RESTRICTION_VIBRATION_SOUND
 import android.os.Build
+import android.util.Log
 import android.util.Range
 import android.view.Surface
 import androidx.annotation.RequiresPermission
@@ -122,19 +123,23 @@ class CameraController(
     @RequiresPermission(Manifest.permission.CAMERA)
     private suspend fun openCamera(
         manager: CameraManager,
-        cameraId: String
+        cameraId: String,
+        callBack: CameraCallback?
     ): CameraDevice = suspendCancellableCoroutine { cont ->
         threadManager.openCamera(
             manager,
             cameraId,
             CameraDeviceCallback(cont)
         )
+        callBack?.onOpened()
+        Log.d("CameraController", "openCamera")
     }
 
     private suspend fun createCaptureSession(
         camera: CameraDevice,
         targets: List<Surface>
     ): CameraCaptureSession = suspendCancellableCoroutine { cont ->
+        Log.d("CameraController", "createCaptureSession")
         threadManager.createCaptureSession(
             camera,
             targets,
@@ -162,34 +167,34 @@ class CameraController(
     @RequiresPermission(Manifest.permission.CAMERA)
     suspend fun startCamera(
         cameraId: String,
-        targets: List<Surface>
+        callBack: CameraCallback?
     ) {
-        require(targets.isNotEmpty()) { " At least one target is required" }
-
         withContext(coroutineDispatcher) {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-            camera = openCamera(manager, cameraId).also { cameraDevice ->
-                captureSession =
-                    createCaptureSession(
-                        cameraDevice,
-                        targets
-                    )
-            }
+            camera = openCamera(manager, cameraId, callBack)
         }
     }
 
     fun startRequestSession(fps: Int, targets: List<Surface>) {
         require(camera != null) { "Camera must not be null" }
-        require(captureSession != null) { "Capture session must not be null" }
         require(targets.isNotEmpty()) { " At least one target is required" }
-
-        captureRequest =
-            createRequestSession(
-                camera!!,
-                captureSession!!,
-                getClosestFpsRange(camera!!.id, fps),
-                targets
-            )
+        runBlocking {
+            Log.d("CameraController", "createCaptureSession")
+            captureSession =
+                createCaptureSession(
+                    camera!!,
+                    targets
+                )
+            require(captureSession != null) { "Capture session must not be null" }
+            Log.d("CameraController", "createRequestSession")
+            captureRequest =
+                createRequestSession(
+                    camera!!,
+                    captureSession!!,
+                    getClosestFpsRange(camera!!.id, fps),
+                    targets
+                )
+        }
     }
 
     fun stopCamera() {

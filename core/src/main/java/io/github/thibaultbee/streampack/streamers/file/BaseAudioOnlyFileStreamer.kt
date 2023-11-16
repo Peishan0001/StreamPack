@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import io.github.thibaultbee.streampack.internal.endpoints.FileWriter
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import io.github.thibaultbee.streampack.streamers.bases.BaseAudioOnlyStreamer
 import io.github.thibaultbee.streampack.streamers.bases.BaseCameraStreamer
@@ -38,7 +39,7 @@ import java.io.OutputStream
 open class BaseAudioOnlyFileStreamer(
     context: Context,
     muxer: IMuxer,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
 ) : BaseAudioOnlyStreamer(
     context = context,
     muxer = muxer,

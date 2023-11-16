@@ -17,6 +17,7 @@ package io.github.thibaultbee.streampack.streamers.file
 
 import android.content.Context
 import io.github.thibaultbee.streampack.internal.muxers.flv.FlvMuxer
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import java.io.File
 
@@ -30,10 +31,12 @@ import java.io.File
 class CameraFlvFileStreamer(
     context: Context,
     enableAudio: Boolean = true,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
+    callBack: CameraCallback?
 ) : BaseCameraFileStreamer(
     context = context,
     muxer = FlvMuxer(context = context, writeToFile = true),
     enableAudio = enableAudio,
-    initialOnErrorListener = initialOnErrorListener
+    initialOnErrorListener = initialOnErrorListener,
+    callBack = callBack
 )

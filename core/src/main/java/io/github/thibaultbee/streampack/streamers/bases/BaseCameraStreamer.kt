@@ -25,6 +25,7 @@ import io.github.thibaultbee.streampack.error.StreamPackError
 import io.github.thibaultbee.streampack.internal.endpoints.IEndpoint
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
 import io.github.thibaultbee.streampack.internal.sources.AudioCapture
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.internal.sources.camera.CameraCapture
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import io.github.thibaultbee.streampack.streamers.helpers.CameraStreamerConfigurationHelper
@@ -33,7 +34,6 @@ import io.github.thibaultbee.streampack.streamers.interfaces.IStreamerEncoderCal
 import io.github.thibaultbee.streampack.streamers.settings.BaseCameraStreamerSettings
 import io.github.thibaultbee.streampack.utils.getCameraList
 import io.github.thibaultbee.streampack.views.AutoFitSurfaceView
-import io.github.thibaultbee.streampack.views.PreviewView
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -51,16 +51,17 @@ open class BaseCameraStreamer(
     enableAudio: Boolean = true,
     muxer: IMuxer,
     endpoint: IEndpoint,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
+    callBack: CameraCallback?
 ) : BaseStreamer(
     context = context,
     encoderCallback = encoderCallback,
-    videoCapture = CameraCapture(context),
     audioCapture = if (enableAudio) AudioCapture() else null,
+    videoCapture = CameraCapture(context, callBack),
     manageVideoOrientation = true,
     muxer = muxer,
     endpoint = endpoint,
-    initialOnErrorListener = initialOnErrorListener
+    initialOnErrorListener = initialOnErrorListener,
 ), ICameraStreamer {
     private val cameraCapture = videoCapture as CameraCapture
     override val helper = CameraStreamerConfigurationHelper(muxer.helper)
@@ -87,6 +88,19 @@ open class BaseCameraStreamer(
 
     override var settings =
         BaseCameraStreamerSettings(audioCapture, cameraCapture, audioEncoder, videoEncoder)
+
+
+    @RequiresPermission(allOf = [Manifest.permission.CAMERA])
+    fun startCamera() {
+        runBlocking {
+            try {
+                cameraCapture.startCamera()
+            } catch (e: Exception) {
+                stopPreview()
+                throw StreamPackError(e)
+            }
+        }
+    }
 
     /**
      * Starts audio and video capture.

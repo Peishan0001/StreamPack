@@ -19,6 +19,7 @@ import android.content.Context
 import io.github.thibaultbee.streampack.internal.endpoints.IEndpoint
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
 import io.github.thibaultbee.streampack.internal.sources.AudioCapture
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 
 /**
@@ -33,11 +34,11 @@ open class BaseAudioOnlyStreamer(
     context: Context,
     muxer: IMuxer,
     endpoint: IEndpoint,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
 ) : BaseStreamer(
     context = context,
-    videoCapture = null,
     audioCapture = AudioCapture(),
+    videoCapture = null,
     manageVideoOrientation = false,
     muxer = muxer,
     endpoint = endpoint,

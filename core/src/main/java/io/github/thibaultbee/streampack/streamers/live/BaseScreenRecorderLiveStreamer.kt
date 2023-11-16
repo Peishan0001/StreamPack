@@ -18,6 +18,7 @@ package io.github.thibaultbee.streampack.streamers.live
 import android.content.Context
 import io.github.thibaultbee.streampack.internal.endpoints.ILiveEndpoint
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.listeners.OnConnectionListener
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import io.github.thibaultbee.streampack.streamers.bases.BaseScreenRecorderStreamer
@@ -39,13 +40,15 @@ open class BaseScreenRecorderLiveStreamer(
     muxer: IMuxer,
     endpoint: ILiveEndpoint,
     initialOnErrorListener: OnErrorListener? = null,
-    initialOnConnectionListener: OnConnectionListener? = null
+    initialOnConnectionListener: OnConnectionListener? = null,
+    callBack: CameraCallback? = null,
 ) : BaseScreenRecorderStreamer(
     context = context,
     enableAudio = enableAudio,
     muxer = muxer,
     endpoint = endpoint,
-    initialOnErrorListener = initialOnErrorListener
+    initialOnErrorListener = initialOnErrorListener,
+    callBack = callBack,
 ),
     ILiveStreamer {
     private val liveProducer = endpoint.apply { onConnectionListener = initialOnConnectionListener }

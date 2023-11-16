@@ -18,6 +18,7 @@ package io.github.thibaultbee.streampack.internal.sources
 import io.github.thibaultbee.streampack.data.VideoConfig
 
 interface IVideoCapture : IFrameCapture<VideoConfig>, ISurfaceCapture {
+
     /**
      * Set to [Boolean.true] to use video source as a Surface renderer (see [ISurfaceCapture]). For example, this is useful
      * for camera and screen recording. If set to [Boolean.false], the encoder will use source as a

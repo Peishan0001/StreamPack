@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat
 import io.github.thibaultbee.streampack.internal.endpoints.IEndpoint
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
 import io.github.thibaultbee.streampack.internal.sources.AudioCapture
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.internal.sources.screen.ScreenCapture
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 
@@ -41,11 +42,12 @@ open class BaseScreenRecorderStreamer(
     enableAudio: Boolean = true,
     muxer: IMuxer,
     endpoint: IEndpoint,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
+    callBack: CameraCallback?
 ) : BaseStreamer(
     context = context,
-    videoCapture = ScreenCapture(context),
     audioCapture = if (enableAudio) AudioCapture() else null,
+    videoCapture = ScreenCapture(context),
     manageVideoOrientation = false,
     muxer = muxer,
     endpoint = endpoint,

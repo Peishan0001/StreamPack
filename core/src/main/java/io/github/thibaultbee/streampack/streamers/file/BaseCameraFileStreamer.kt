@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import io.github.thibaultbee.streampack.internal.endpoints.FileWriter
 import io.github.thibaultbee.streampack.internal.muxers.IMuxer
+import io.github.thibaultbee.streampack.internal.sources.camera.CameraCallback
 import io.github.thibaultbee.streampack.listeners.OnErrorListener
 import io.github.thibaultbee.streampack.streamers.bases.BaseCameraStreamer
 import io.github.thibaultbee.streampack.streamers.interfaces.IFileStreamer
@@ -38,13 +39,15 @@ open class BaseCameraFileStreamer(
     context: Context,
     enableAudio: Boolean = true,
     muxer: IMuxer,
-    initialOnErrorListener: OnErrorListener? = null
+    initialOnErrorListener: OnErrorListener? = null,
+    callBack: CameraCallback?
 ) : BaseCameraStreamer(
     context = context,
     enableAudio = enableAudio,
     muxer = muxer,
     endpoint = FileWriter(),
-    initialOnErrorListener = initialOnErrorListener
+    initialOnErrorListener = initialOnErrorListener,
+    callBack = callBack
 ),
     IFileStreamer {
     private val fileWriter = endpoint as FileWriter

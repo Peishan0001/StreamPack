@@ -30,6 +30,7 @@ import java.nio.ByteBuffer
 
 class CameraCapture(
     private val context: Context,
+    private val callBack: CameraCallback?,
 ) : IVideoCapture {
     var previewSurface: Surface? = null
 
@@ -72,11 +73,19 @@ class CameraCapture(
     }
 
     @RequiresPermission(Manifest.permission.CAMERA)
+    suspend fun startCamera() {
+        var targets = mutableListOf<Surface>()
+        previewSurface?.let { targets.add(it) }
+        encoderSurface?.let { targets.add(it) }
+        cameraController.startCamera(cameraId, callBack)
+    }
+
+    @RequiresPermission(Manifest.permission.CAMERA)
     suspend fun startPreview(cameraId: String = this.cameraId, restartStream: Boolean = false) {
         var targets = mutableListOf<Surface>()
         previewSurface?.let { targets.add(it) }
         encoderSurface?.let { targets.add(it) }
-        cameraController.startCamera(cameraId, targets)
+//        cameraController.startCamera(cameraId, targets)
 
         targets = mutableListOf()
         previewSurface?.let { targets.add(it) }

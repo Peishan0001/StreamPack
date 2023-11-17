@@ -51,6 +51,7 @@ class CameraCapture(
                 stopPreview()
                 field = value
                 if (restartPreview) {
+                    startCamera()
                     startPreview(value, restartStream)
                 }
             }

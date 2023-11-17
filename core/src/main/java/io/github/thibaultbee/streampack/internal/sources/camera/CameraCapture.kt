@@ -81,7 +81,7 @@ class CameraCapture(
     }
 
     @RequiresPermission(Manifest.permission.CAMERA)
-    suspend fun startPreview(cameraId: String = this.cameraId, restartStream: Boolean = false) {
+    fun startPreview(cameraId: String = this.cameraId, restartStream: Boolean = false) {
         var targets = mutableListOf<Surface>()
         previewSurface?.let { targets.add(it) }
         encoderSurface?.let { targets.add(it) }
